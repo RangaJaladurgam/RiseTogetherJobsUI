@@ -1,0 +1,9 @@
+.appbar-logo{
+    background-color: rgb(255, 255, 255);
+    width: 100%;
+    height: 20vh;
+    /* overflow: hidden; */
+    object-position: center;
+    display: flex;
+    justify-content: center;
+}
