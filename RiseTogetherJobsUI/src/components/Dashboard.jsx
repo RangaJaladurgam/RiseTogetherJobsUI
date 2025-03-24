@@ -8,9 +8,10 @@ function Dashboard() {
     const fetchJobs = async () => {
       try {
         const response = await axios.get("http://localhost:8080/jobs", {
-          validateStatus: (status) => status === 200 || status === 302 || status === 404,
+          validateStatus: (status) =>
+            status === 200 || status === 302 || status === 404,
         });
-        console.log(response.data.data)
+        console.log(response.data.data);
         if (response.data?.data) {
           const sortedJobs = response.data.data.sort(
             (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -36,9 +37,20 @@ function Dashboard() {
                   <img src={job.imageUrl} alt="Company Logo" />
                   <div className="card-text">
                     <h2>{job.title}</h2>
-                    <p>{new Date(job.createdAt).toLocaleDateString()}</p>
+                    <div style={{display:"flex",gap:"0.5rem",alignItems:"center"}}>
+                      <p style={{ textAlign: "left", fontSize: "12px" }}>{job.adminResponse.username.charAt(0).toUpperCase() + job.adminResponse.username.slice(1).toLowerCase()}</p>
+                      <p style={{ textAlign: "left", fontSize: "12px" }}>- &nbsp;
+                        {new Date(job.createdAt).toLocaleDateString("en-US", {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </p>
+                    </div>
                   </div>
-                    <span className="card-category-label">{job.category.name}</span>
+                  <span className="card-category-label">
+                    {job.category.name}
+                  </span>
                 </div>
               </div>
             ))
@@ -60,4 +72,3 @@ function Dashboard() {
 }
 
 export default Dashboard;
-    

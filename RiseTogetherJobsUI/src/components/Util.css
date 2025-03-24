@@ -87,12 +87,12 @@
 /* Text Styling */
 .card-text {
   position: absolute;
+  padding: 0.3rem 1rem;
   width: 100%;
   bottom: 10px; /* Adjust position */
   left: 50%;
   transform: translateX(-50%);
   color: white;
-  font-weight: bold;
   text-align: center;
   z-index: 2; /* Ensures text is above the gradient */
 }
@@ -101,11 +101,37 @@
   padding: 0.3rem 1rem;
   position: absolute;
   top: 10px; /* Adjust position */
-  right: 10px;
+  right: 30px;
   color: rgb(255, 254, 254);
   font-weight: bold;
   z-index: 2;
 }
+  .card-category-label:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+  }
+  .card-category-label:before {
+    content: "";
+    position: absolute;
+    right: -20px;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-left: 20px solid rgb(0, 119, 255);
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+  }
+
+
+
+
+
 @media screen and (max-width: 700px) {
   .appbar-logo {
     height: 15vh;
