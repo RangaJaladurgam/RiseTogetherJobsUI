@@ -1,18 +1,41 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import react from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import "./App.css";
-import AppBar from "./components/AppBar";
+import HeaderBar from "./components/HeaderBar";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   return (
-    <div className="app-container">
-      <AppBar/>
-      <div className="main-container">
+    <div>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Dashboard />} />
 
-      </div>
+        {/* Protected Routes */}
+
+        {/* Redirect unknown routes to login */}
+        
+      </Routes>
     </div>
   );
 }
 
-export default App;
+const AppWrapper = () => {
+  return (
+    <Router>
+      <div className="app-container">
+        <HeaderBar />
+        <div className="main-container">
+          <App />
+        </div>
+      </div>
+    </Router>
+  );
+};
+
+export default AppWrapper;

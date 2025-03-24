@@ -1,4 +1,16 @@
 .app-container{
     margin-inline:5rem;
     background-color: white;
+    overflow: hidden;
+}
+
+.main-container{
+    padding: 1rem 2rem;
+}
+
+
+@media screen and (max-width:700px){
+    .app-container{
+        margin:0;
+    }
 }

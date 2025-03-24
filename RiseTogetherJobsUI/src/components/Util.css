@@ -7,3 +7,17 @@
     display: flex;
     justify-content: center;
 }
+
+.menubar{
+    padding: 0.6rem 2rem;
+    background-color: red;
+}
+
+
+
+
+@media screen and (max-width:700px){
+    .appbar-logo{
+        height: 15vh;
+    }
+}
