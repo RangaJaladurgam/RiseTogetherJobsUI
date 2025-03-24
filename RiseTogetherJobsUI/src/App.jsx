@@ -8,6 +8,7 @@ import {
 import "./App.css";
 import HeaderBar from "./components/HeaderBar";
 import Dashboard from "./components/Dashboard";
+import Login from "./components/Login";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Dashboard />} />
+        <Route path="/admins/login" element={<Login/>} />
 
         {/* Protected Routes */}
 
