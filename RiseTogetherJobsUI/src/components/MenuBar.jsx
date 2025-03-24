@@ -15,20 +15,21 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
-const navItems = ["Fresher", "Internship", "Experience"];
+const navItems = ["Home","Freshers", "Internships", "Experience"];
 
 function MenuBar(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const navigate = useNavigate();  // ✅ Move useNavigate() inside the component
+  const navigate = useNavigate(); 
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
 
   const handleNavigation = (item) => {
-    if (item === "Fresher") navigate("/jobs/fresher");
-    if (item === "Internship") navigate("/jobs/internship");
+    if (item === "Home") navigate("/");
+    if (item === "Freshers") navigate("/jobs/freshers");
+    if (item === "Internships") navigate("/jobs/internships");
     if (item === "Experience") navigate("/jobs/experience");
   };
 
@@ -56,7 +57,7 @@ function MenuBar(props) {
     <Box>
       <CssBaseline />
       <AppBar position="static">
-        <Toolbar sx={{ minHeight: "45px !important" }}>
+        <Toolbar sx={{ minHeight: "45px !important",backgroundColor:"black" }}>
           {/* Mobile Menu Button */}
           <IconButton
             color="inherit"
