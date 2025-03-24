@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import "./Util.css";
 import { Link, useNavigate } from "react-router-dom";
 
-function Login() {
+function Login({ setIsLoggedIn }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -50,6 +50,7 @@ function Login() {
       if (response.status === 200) {
         localStorage.setItem("token", response.data.token);
         setIsLoggedIn(true);
+        navigate("/admins/dashboard");
       } else {
         setError("Invalid Credentials!!");
       }
@@ -92,7 +93,7 @@ function Login() {
               border: "none",
               backgroundColor: "transparent",
             }}
-            onClick={() =>  setShowPassword(!showPassword)}
+            onClick={() => setShowPassword(!showPassword)}
           >
             {showPassword ? (
               <i className="fa-solid fa-eye"></i>
@@ -101,7 +102,6 @@ function Login() {
             )}
           </Button>
         </div>
-        
 
         <Button
           type="submit"
@@ -118,7 +118,7 @@ function Login() {
       </form>
 
       <p>
-        Don't have an account? <Link to="/register">Register</Link>
+        Don't have an account? <Link to="/admins/register">Register</Link>
       </p>
     </div>
   );
