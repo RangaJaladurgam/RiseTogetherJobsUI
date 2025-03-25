@@ -6,6 +6,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
 import axios from "axios";
+import Image1 from "../assets/rtn-logo-3.jpeg";
 
 function PostJob() {
   const [title, setTitle] = useState("");
@@ -76,7 +77,7 @@ function PostJob() {
     handleFetchCategories();
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateInputs()) {
       console.log({
@@ -86,6 +87,27 @@ function PostJob() {
         imageUrl,
         expireDate,
       });
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/jobs/create",
+          {
+            title: title,
+            description: description,
+            location: location,
+            imageUrl: imageUrl,
+            expireDate: expireDate,
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params : {categoryId : categoryTitle},
+            validateStatus: (status) => status === 200 || status === 201,
+          }
+        );
+        console.log(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -140,12 +162,20 @@ function PostJob() {
                 fullWidth
               >
                 {categories.map((category) => (
-                  <MenuItem  value={category.name} key={category.categoryId} onClick={() => setShowForm(false)}>
+                  <MenuItem
+                    value={category.categoryId}
+                    key={category.categoryId}
+                    onClick={() => setShowForm(false)}
+                  >
                     {category.name}
                   </MenuItem>
                 ))}
-                <MenuItem style={{color:"blue"}} value="Other" onClick={() => setShowForm(true)}>
-                  + Add New Category
+                <MenuItem
+                  style={{ color: "blue" }}
+                  value="Other"
+                  onClick={() => setShowForm(true)}
+                >
+                  + Add New
                 </MenuItem>
               </TextField>
             </div>
@@ -186,7 +216,9 @@ function PostJob() {
             <form></form>
           </div>
         ) : (
-          <p></p>
+          <div className="job-post-category">
+            <img src={Image1} alt="" width="400" />
+          </div>
         )}
       </div>
     </LocalizationProvider>
