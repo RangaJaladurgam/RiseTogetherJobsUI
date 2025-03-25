@@ -36,7 +36,7 @@ function Dashboard() {
                 <div className="card-image">
                   <img src={job.imageUrl} alt="Company Logo" />
                   <div className="card-text">
-                    <h2>{job.title}</h2>
+                    <h2>{job.title.toUpperCase()}</h2>
                     <div style={{display:"flex",gap:"0.5rem",alignItems:"center"}}>
                       <p style={{ textAlign: "left", fontSize: "12px" }}>{job.adminResponse.username.charAt(0).toUpperCase() + job.adminResponse.username.slice(1).toLowerCase()}</p>
                       <p style={{ textAlign: "left", fontSize: "12px" }}>- &nbsp;

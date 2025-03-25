@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -15,22 +16,61 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
-const navItems = ["Home","Freshers", "Internships", "Experience"];
 
 function MenuBar(props) {
   const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const navigate = useNavigate(); 
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    navigate("/admins/login");
+  };
+
+  const navItems = isLoggedIn
+    ? ["Dashboard", "Post Job", "Show Jobs", "Logout"]
+    : ["Home", "Freshers", "Internships", "Experience"];
+
+  const handleNavigation = (item) => {
+    switch (item) {
+      case "Home":
+        navigate("/");
+        break;
+      case "Freshers":
+        navigate("/jobs/freshers");
+        break;
+      case "Internships":
+        navigate("/jobs/internships");
+        break;
+      case "Experience":
+        navigate("/jobs/experience");
+        break;
+      case "Dashboard":
+        navigate("/admins/dashboard");
+        break;
+      case "Post Job":
+        navigate("/admins/post-job");
+        break;
+      case "Show Jobs":
+        navigate("/admins/show-jobs");
+        break;
+      case "Logout":
+        handleLogout();
+        break;
+      default:
+        break;
+    }
+  };
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
-  };
-
-  const handleNavigation = (item) => {
-    if (item === "Home") navigate("/");
-    if (item === "Freshers") navigate("/jobs/freshers");
-    if (item === "Internships") navigate("/jobs/internships");
-    if (item === "Experience") navigate("/jobs/experience");
   };
 
   const drawer = (
@@ -41,7 +81,10 @@ function MenuBar(props) {
       <List>
         {navItems.map((item) => (
           <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: "left", paddingLeft: "3rem" }} onClick={() => handleNavigation(item)}>
+            <ListItemButton
+              sx={{ textAlign: "left", paddingLeft: "3rem" }}
+              onClick={() => handleNavigation(item)}
+            >
               <ListItemText primary={item} />
             </ListItemButton>
           </ListItem>
@@ -57,7 +100,12 @@ function MenuBar(props) {
     <Box>
       <CssBaseline />
       <AppBar position="static">
-        <Toolbar sx={{ minHeight: "45px !important",backgroundColor:"black" }}>
+        <Toolbar
+          sx={{
+            minHeight: "45px !important",
+            backgroundColor: isLoggedIn ? "voilet" : "black",
+          }}
+        >
           {/* Mobile Menu Button */}
           <IconButton
             color="inherit"
@@ -72,7 +120,11 @@ function MenuBar(props) {
           {/* Desktop Navigation Links */}
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems.map((item) => (
-              <Button key={item} sx={{ color: "#fff", fontWeight: "700" }} onClick={() => handleNavigation(item)}>
+              <Button
+                key={item}
+                sx={{ color: "#fff", fontWeight: "700" }}
+                onClick={() => handleNavigation(item)}
+              >
                 {item}
               </Button>
             ))}
@@ -101,7 +153,6 @@ function MenuBar(props) {
   );
 }
 
-// Add PropTypes for `window`
 MenuBar.propTypes = {
   window: PropTypes.func,
 };
