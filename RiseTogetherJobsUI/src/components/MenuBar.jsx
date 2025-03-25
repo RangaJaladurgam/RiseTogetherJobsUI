@@ -21,7 +21,7 @@ function MenuBar(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -35,7 +35,7 @@ function MenuBar(props) {
   };
 
   const navItems = isLoggedIn
-    ? ["Add Job", "Show Jobs", "Logout"]
+    ? ["Dashboard", "Post Job", "Show Jobs", "Logout"]
     : ["Home", "Freshers", "Internships", "Experience"];
 
   const handleNavigation = (item) => {
@@ -52,8 +52,11 @@ function MenuBar(props) {
       case "Experience":
         navigate("/jobs/experience");
         break;
-      case "Add Job":
-        navigate("/admins/add-job");
+      case "Dashboard":
+        navigate("/admins/dashboard");
+        break;
+      case "Post Job":
+        navigate("/admins/post-job");
         break;
       case "Show Jobs":
         navigate("/admins/show-jobs");
@@ -71,11 +74,17 @@ function MenuBar(props) {
   };
 
   const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center", paddingTop: "5rem" }}>
+    <Box
+      onClick={handleDrawerToggle}
+      sx={{ textAlign: "center", paddingTop: "5rem" }}
+    >
       <List>
         {navItems.map((item) => (
           <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: "left", paddingLeft: "3rem" }} onClick={() => handleNavigation(item)}>
+            <ListItemButton
+              sx={{ textAlign: "left", paddingLeft: "3rem" }}
+              onClick={() => handleNavigation(item)}
+            >
               <ListItemText primary={item} />
             </ListItemButton>
           </ListItem>
@@ -84,13 +93,19 @@ function MenuBar(props) {
     </Box>
   );
 
-  const container = window !== undefined ? () => window().document.body : undefined;
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
 
   return (
     <Box>
       <CssBaseline />
       <AppBar position="static">
-        <Toolbar sx={{ minHeight: "45px !important", backgroundColor: isLoggedIn ? "voilet" : "black" }}>
+        <Toolbar
+          sx={{
+            minHeight: "45px !important",
+            backgroundColor: isLoggedIn ? "voilet" : "black",
+          }}
+        >
           {/* Mobile Menu Button */}
           <IconButton
             color="inherit"
@@ -105,7 +120,11 @@ function MenuBar(props) {
           {/* Desktop Navigation Links */}
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems.map((item) => (
-              <Button key={item} sx={{ color: "#fff", fontWeight: "700" }} onClick={() => handleNavigation(item)}>
+              <Button
+                key={item}
+                sx={{ color: "#fff", fontWeight: "700" }}
+                onClick={() => handleNavigation(item)}
+              >
                 {item}
               </Button>
             ))}

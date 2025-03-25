@@ -106,47 +106,94 @@
   font-weight: bold;
   z-index: 2;
 }
-  .card-category-label:after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 0;
-    height: 0;
-    border-top: 20px solid transparent;
-    border-bottom: 20px solid transparent;
-  }
-  .card-category-label:before {
-    content: "";
-    position: absolute;
-    right: -20px;
-    bottom: 0;
-    width: 0;
-    height: 0;
-    border-left: 20px solid rgb(0, 119, 255);
-    border-top: 20px solid transparent;
-    border-bottom: 20px solid transparent;
-  }
-
-  /* login page */
-.form-page{
-    height: 68vh;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    /* background-color: red; */
-    align-items: center;
+.card-category-label:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+}
+.card-category-label:before {
+  content: "";
+  position: absolute;
+  right: -20px;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-left: 20px solid rgb(0, 119, 255);
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
 }
 
-.form{
-    width: 50%;
-    display: flex;
-    gap: 1rem;
-    flex-direction: column;
-    justify-content: center;
+/* login page */
+.form-page {
+  height: 68vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  /* background-color: red; */
+  align-items: center;
 }
 
+.form {
+  width: 50%;
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  justify-content: center;
+}
 
+.job-post-container {
+  display: flex;
+  gap: 1rem;
+}
+.job-post-form {
+  flex-basis: 60%;
+}
+.job-post-category {
+  flex-basis: 40%;
+}
+
+.job-post-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.job-post-form .loc-exp,
+.job-post-form .img-cat {
+  display: flex;
+  gap: 1rem;
+}
+.img-cat .img-url {
+  flex-basis: 60%;
+}
+.img-cat .category-options {
+  flex-basis: 40%;
+}
+
+@media screen and (max-width: 954px) {
+  .job-post-container {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .job-post-form {
+    flex-grow: 1;
+  }
+  
+  .job-post-form .loc-exp,
+  .job-post-form .img-cat {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .img-cat .img-url ,   .img-cat .category-options{
+    flex-basis: 100%;
+  }
+}
 
 @media screen and (max-width: 767px) {
   .appbar-logo {
@@ -155,10 +202,10 @@
   .dashboard-container {
     display: block;
   }
-  .form-page{
+  .form-page {
     height: 75vh;
   }
-  .form{
+  .form {
     width: 100%;
-}
+  }
 }
