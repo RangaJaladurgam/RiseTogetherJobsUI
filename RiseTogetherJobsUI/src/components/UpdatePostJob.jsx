@@ -4,19 +4,23 @@ import { MenuItem, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { useNavigate, useParams } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import CheckIcon from "@mui/icons-material/Check";
 import dayjs from "dayjs";
 import axios from "axios";
 import Image1 from "../assets/rtn-logo-3.jpeg";
 
-function PostJob() {
+function UpdatePostJob() {
+  const navigate = useNavigate();
+  const { jobPostId } = useParams();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [expireDate, setExpireDate] = useState(null);
   const [categoryTitle, setCategoryTitle] = useState("");
+  const [categoryId, setCategoryId] = useState("");
   const [categories, setCategories] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [categoryName, setCategoryName] = useState("");
@@ -81,13 +85,41 @@ function PostJob() {
     return isValid;
   };
 
+  useEffect(() => {
+    const fetchJobPost = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/jobs/" + jobPostId,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            validateStatus: (status) => status === 200 || status === 302,
+          }
+        );
+        const job = response.data.data;
+        if (response.status === 302) {
+          setTitle(job.title);
+          setDescription(job.description);
+          setLocation(job.location);
+          setExpireDate(job.expireDate);
+          setCategoryId(job.category.categoryId);
+          setCategoryTitle(job.category.name);
+          setImageUrl(job.imageUrl);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchJobPost();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateInputs()) {
       const token = localStorage.getItem("token");
       try {
-        const response = await axios.post(
-          "http://localhost:8080/jobs/create",
+        const response = await axios.put(
+          "http://localhost:8080/jobs/" + jobPostId,
           {
             title: title,
             description: description,
@@ -97,12 +129,12 @@ function PostJob() {
           },
           {
             headers: { Authorization: `Bearer ${token}` },
-            params: { categoryId: categoryTitle },
+            params: { categoryId: categoryId },
             validateStatus: (status) => status === 200 || status === 201,
           }
         );
 
-        if (response.status === 201) {
+        if (response.status === 200) {
           setShowSuccessAlert(true);
           setTitle(""); // Clear input// Hide after 3 sec
           setDescription(""); // Clear input// Hide after 3 sec
@@ -110,8 +142,8 @@ function PostJob() {
           setImageUrl(""); // Clear input// Hide after 3 sec
           setExpireDate(""); // Clear input// Hide after 3 sec
           setTimeout(() => setShowSuccessAlert(false), 5000);
-        }
-        else{
+          navigate("/admins/show-jobs");
+        } else {
           setShowErrorAlert(true);
           setTimeout(() => setShowErrorAlert(false), 5000);
         }
@@ -140,8 +172,7 @@ function PostJob() {
           setShowCategorySuccessAlert(true);
           setCategoryName(""); // Clear input// Hide after 3 sec
           setTimeout(() => setShowCategorySuccessAlert(false), 5000);
-        }
-        else{
+        } else {
           setShowCategoryErrorAlert(true);
           setTimeout(() => setShowCategoryErrorAlert(false), 5000);
         }
@@ -170,10 +201,10 @@ function PostJob() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       {showSuccessAlert && (
-        <Alert severity="success">Job Posted Successfully.</Alert>
+        <Alert severity="success">Job Posted Updated Successfully.</Alert>
       )}
       {showErrorAlert && (
-        <Alert severity="error">Error Posting Job. Try Again!</Alert>
+        <Alert severity="error">Error Updating Job. Try Again!</Alert>
       )}
       {showCategorySuccessAlert && (
         <Alert severity="success">Category Added Successfully.</Alert>
@@ -231,9 +262,12 @@ function PostJob() {
               >
                 {categories.map((category) => (
                   <MenuItem
-                    value={category.categoryId}
+                    value={category.name}
                     key={category.categoryId}
-                    onClick={() => setShowForm(false)}
+                    onClick={() => {
+                      setShowForm(false);
+                      setCategoryId(category.categoryId);
+                    }}
                   >
                     {category.name}
                   </MenuItem>
@@ -325,4 +359,4 @@ function PostJob() {
   );
 }
 
-export default PostJob;
+export default UpdatePostJob;

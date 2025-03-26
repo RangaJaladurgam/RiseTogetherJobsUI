@@ -103,7 +103,7 @@ function MenuBar(props) {
         <Toolbar
           sx={{
             minHeight: "45px !important",
-            backgroundColor: isLoggedIn ? "voilet" : "black",
+            backgroundColor: isLoggedIn ? "rgb(157, 0, 255)" : "black",
           }}
         >
           {/* Mobile Menu Button */}
@@ -119,15 +119,24 @@ function MenuBar(props) {
 
           {/* Desktop Navigation Links */}
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            {navItems.map((item) => (
-              <Button
-                key={item}
-                sx={{ color: "#fff", fontWeight: "700" }}
-                onClick={() => handleNavigation(item)}
-              >
-                {item}
-              </Button>
-            ))}
+            <ul style={{ display: "flex", listStyle: "none" }}>
+              {navItems.map((item) => (
+                <li
+                  className="menu-item"
+                  key={item}
+                  onClick={() => handleNavigation(item)}
+                  onMouseEnter={(e) => {
+                    if (item === "Logout")
+                      e.target.style.backgroundColor = "red";
+                  }}
+                  onMouseLeave={(e) => {
+                    if (item === "Logout") e.target.style.backgroundColor = "";
+                  }}
+                >
+                  {item}
+                </li>
+              ))}
+            </ul>
           </Box>
         </Toolbar>
       </AppBar>
