@@ -111,6 +111,10 @@ function PostJob() {
           setExpireDate(""); // Clear input// Hide after 3 sec
           setTimeout(() => setShowSuccessAlert(false), 5000);
         }
+        else{
+          setShowErrorAlert(true);
+          setTimeout(() => setShowErrorAlert(false), 5000);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -136,6 +140,10 @@ function PostJob() {
           setShowCategorySuccessAlert(true);
           setCategoryName(""); // Clear input// Hide after 3 sec
           setTimeout(() => setShowCategorySuccessAlert(false), 5000);
+        }
+        else{
+          setShowCategoryErrorAlert(true);
+          setTimeout(() => setShowCategoryErrorAlert(false), 5000);
         }
       } catch (error) {
         console.log(error);
@@ -269,7 +277,7 @@ function PostJob() {
               type="submit"
               variant="contained"
               style={{
-                backgroundColor: showSuccessAlert
+                backgroundColor: showCategorySuccessAlert
                   ? "green"
                   : "rgb(157, 0, 255)",
               }}

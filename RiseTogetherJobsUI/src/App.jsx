@@ -12,6 +12,7 @@ import Register from "./components/Register";
 import AdminDashboard from "./components/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PostJob from "./components/PostJob";
+import AdminShowJobs from "./components/AdminShowJobs";
 
 function App({ isLoggedIn, setIsLoggedIn, handleLogout }) {
   return (
@@ -27,6 +28,7 @@ function App({ isLoggedIn, setIsLoggedIn, handleLogout }) {
         <Route element={<ProtectedRoute isLoggedIn={isLoggedIn} />}>
           <Route path="/admins/dashboard" element={<AdminDashboard />} />
           <Route path="/admins/post-job" element={<PostJob />} />
+          <Route path="/admins/show-jobs" element={<AdminShowJobs />} />
         </Route>
 
         {/* Redirect unknown routes to login */}
