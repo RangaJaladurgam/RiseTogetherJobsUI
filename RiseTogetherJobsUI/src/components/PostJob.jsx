@@ -265,8 +265,17 @@ function PostJob() {
                 }}
               />
             </div>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
-              Submit
+            <Button
+              type="submit"
+              variant="contained"
+              style={{
+                backgroundColor: showSuccessAlert
+                  ? "green"
+                  : "rgb(157, 0, 255)",
+              }}
+              fullWidth
+            >
+              {showSuccessAlert ? "Job Posted" : "Post"}
             </Button>
           </form>
         </div>
@@ -287,10 +296,14 @@ function PostJob() {
               <Button
                 type="submit"
                 variant="contained"
-                color="primary"
+                style={{
+                  backgroundColor: showCategorySuccessAlert
+                    ? "green"
+                    : "rgb(157, 0, 255)",
+                }}
                 fullWidth
               >
-                Add Category
+                {showCategorySuccessAlert ? "Category Added" : "Add Category"}
               </Button>
             </form>
           </div>
@@ -303,6 +316,5 @@ function PostJob() {
     </LocalizationProvider>
   );
 }
-
 
 export default PostJob;
