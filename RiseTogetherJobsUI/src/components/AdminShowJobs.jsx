@@ -3,8 +3,10 @@ import axios from "axios";
 import { Button } from "@mui/material";
 import { Tooltip } from "@mui/material";
 import Alert from "@mui/material/Alert";
+import { useNavigate } from "react-router-dom";
 
 function AdminShowJobs() {
+  const navigate = useNavigate();
   const [jobsList, setJobsList] = useState([]);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -42,13 +44,18 @@ function AdminShowJobs() {
         }
       );
       if (response.status === 200) {
-        setJobsList((prevJobs) => prevJobs.filter((job) => job.jobPostId !== jobPostId))
+        setJobsList((prevJobs) =>
+          prevJobs.filter((job) => job.jobPostId !== jobPostId)
+        );
         setShowSuccessAlert(true);
         setTimeout(() => setShowSuccessAlert(false), 5000);
       }
     } catch (error) {
       console.log(error);
     }
+  };
+  const handleUpdate = async (jobPostId) => {
+    navigate(`/admins/update-job/${jobPostId}`)
   };
 
   const trimToTwoLines = (text, maxWords = 10) => {
@@ -115,7 +122,11 @@ function AdminShowJobs() {
                   {job.adminResponse.username}
                 </td>
                 <td>
-                  <Button color="primary" variant="text">
+                  <Button
+                    color="primary"
+                    variant="text"
+                    onClick={() => handleUpdate(job.jobPostId)}
+                  >
                     <i className="fa-solid fa-pen-to-square"></i>
                   </Button>
                 </td>
