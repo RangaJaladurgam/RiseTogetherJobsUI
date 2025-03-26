@@ -119,15 +119,17 @@ function MenuBar(props) {
 
           {/* Desktop Navigation Links */}
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            {navItems.map((item) => (
-              <Button
-                key={item}
-                sx={{ color: "#fff", fontWeight: "700" }}
-                onClick={() => handleNavigation(item)}
-              >
-                {item}
-              </Button>
-            ))}
+            <ul style={{display:"flex",listStyle:"none"}}>
+              {navItems.map((item) => (
+                <li
+                className="menu-item"
+                  key={item}
+                  onClick={() => handleNavigation(item)}
+                >
+                  {item}
+                </li>
+              ))}
+            </ul>
           </Box>
         </Toolbar>
       </AppBar>

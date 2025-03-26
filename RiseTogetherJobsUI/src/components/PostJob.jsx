@@ -4,6 +4,8 @@ import { MenuItem, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import Alert from "@mui/material/Alert";
+import CheckIcon from "@mui/icons-material/Check";
 import dayjs from "dayjs";
 import axios from "axios";
 import Image1 from "../assets/rtn-logo-3.jpeg";
@@ -14,15 +16,23 @@ function PostJob() {
   const [location, setLocation] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [expireDate, setExpireDate] = useState(null);
-  const [categoryTitle, setCategoryTitle] = useState(""); // Category title state
+  const [categoryTitle, setCategoryTitle] = useState("");
   const [categories, setCategories] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [categoryName, setCategoryName] = useState("");
 
   const [titleError, setTitleError] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
   const [locationError, setLocationError] = useState("");
   const [imageUrlError, setImageUrlError] = useState("");
   const [expireDateError, setExpireDateError] = useState("");
+  const [categoryNameError, setCategoryNameError] = useState("");
+
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [showCategorySuccessAlert, setShowCategorySuccessAlert] =
+    useState(false);
+  const [showCategoryErrorAlert, setShowCategoryErrorAlert] = useState(false);
 
   const validateInputs = () => {
     let isValid = true;
@@ -60,6 +70,78 @@ function PostJob() {
 
     return isValid;
   };
+  const validateCategoryInputs = () => {
+    let isValid = true;
+    if (categoryName.trim() === "") {
+      setCategoryNameError("Category name cannot be blank");
+      isValid = false;
+    } else {
+      setCategoryNameError("");
+    }
+    return isValid;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (validateInputs()) {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/jobs/create",
+          {
+            title: title,
+            description: description,
+            location: location,
+            imageUrl: imageUrl,
+            expireDate: expireDate,
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: { categoryId: categoryTitle },
+            validateStatus: (status) => status === 200 || status === 201,
+          }
+        );
+
+        if (response.status === 201) {
+          setShowSuccessAlert(true);
+          setTitle(""); // Clear input// Hide after 3 sec
+          setDescription(""); // Clear input// Hide after 3 sec
+          setLocation(""); // Clear input// Hide after 3 sec
+          setImageUrl(""); // Clear input// Hide after 3 sec
+          setExpireDate(""); // Clear input// Hide after 3 sec
+          setTimeout(() => setShowSuccessAlert(false), 5000);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const handleCategorySubmit = async (e) => {
+    e.preventDefault();
+    if (validateCategoryInputs()) {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/categories",
+          {
+            name: categoryName.toUpperCase(),
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            validateStatus: (status) => status === 200 || status === 201,
+          }
+        );
+        if (response.status === 201) {
+          setShowCategorySuccessAlert(true);
+          setCategoryName(""); // Clear input// Hide after 3 sec
+          setTimeout(() => setShowCategorySuccessAlert(false), 5000);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   useEffect(() => {
     const handleFetchCategories = async () => {
@@ -77,42 +159,20 @@ function PostJob() {
     handleFetchCategories();
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (validateInputs()) {
-      console.log({
-        title,
-        description,
-        location,
-        imageUrl,
-        expireDate,
-      });
-      const token = localStorage.getItem("token");
-      try {
-        const response = await axios.post(
-          "http://localhost:8080/jobs/create",
-          {
-            title: title,
-            description: description,
-            location: location,
-            imageUrl: imageUrl,
-            expireDate: expireDate,
-          },
-          {
-            headers: { Authorization: `Bearer ${token}` },
-            params : {categoryId : categoryTitle},
-            validateStatus: (status) => status === 200 || status === 201,
-          }
-        );
-        console.log(response.data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
+      {showSuccessAlert && (
+        <Alert severity="success">Job Posted Successfully.</Alert>
+      )}
+      {showErrorAlert && (
+        <Alert severity="error">Error Posting Job. Try Again!</Alert>
+      )}
+      {showCategorySuccessAlert && (
+        <Alert severity="success">Category Added Successfully.</Alert>
+      )}
+      {showCategoryErrorAlert && (
+        <Alert severity="error">Error Adding Category. Try Again!</Alert>
+      )}
       <div className="job-post-container">
         <div className="job-post-form">
           <h2>Post a Job</h2>
@@ -213,7 +273,26 @@ function PostJob() {
         {showForm ? (
           <div className="job-post-category">
             <h2>Add Category</h2>
-            <form></form>
+            <form onSubmit={handleCategorySubmit}>
+              <TextField
+                label="Category Name"
+                type="text"
+                variant="outlined"
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
+                error={!!categoryNameError}
+                helperText={categoryNameError}
+                fullWidth
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+              >
+                Add Category
+              </Button>
+            </form>
           </div>
         ) : (
           <div className="job-post-category">
@@ -224,5 +303,6 @@ function PostJob() {
     </LocalizationProvider>
   );
 }
+
 
 export default PostJob;
