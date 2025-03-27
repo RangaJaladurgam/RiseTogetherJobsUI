@@ -55,7 +55,7 @@ function AdminShowJobs() {
     }
   };
   const handleUpdate = async (jobPostId) => {
-    navigate(`/admins/update-job/${jobPostId}`)
+    navigate(`/admins/update-job/${jobPostId}`);
   };
 
   const trimToTwoLines = (text, maxWords = 10) => {
@@ -72,77 +72,79 @@ function AdminShowJobs() {
           <Alert severity="success">Job Post Deleted Successfully.</Alert>
         )}
         <h2>Jobs Posted</h2>
-        <table border={1} className="show-jobs-table">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Description</th>
-              <th>Location</th>
-              <th>Image Link</th>
-              <th>Posted At</th>
-              <th>Expire Date</th>
-              <th>Category</th>
-              <th>Admin Name</th>
-              <th>Edit</th>
-              <th>Delete</th>
-            </tr>
-          </thead>
-          <tbody>
-            {jobsList.map((job) => (
-              <tr key={job.jobPostId}>
-                <td className="multi-line-text">
-                  <Tooltip title={job.title} arrow>
-                    <span>{job.title}</span>
-                  </Tooltip>
-                </td>
-                <td className="multi-line-text">
-                  <Tooltip title={job.description} arrow>
-                    <span>{trimToTwoLines(job.description)}</span>
-                  </Tooltip>
-                </td>
-                <td className="multi-line-text">{job.location}</td>
-                <td className="multi-line-text">{job.imageUrl}</td>
-                <td className="multi-line-text">
-                  {new Date(job.createdAt).toLocaleDateString("en-US", {
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </td>
-                <td className="multi-line-text">
-                  {" "}
-                  {new Date(job.expireDate).toLocaleDateString("en-US", {
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </td>
-                <td className="multi-line-text">{job.category.name}</td>
-                <td className="multi-line-text">
-                  {job.adminResponse.username}
-                </td>
-                <td>
-                  <Button
-                    color="primary"
-                    variant="text"
-                    onClick={() => handleUpdate(job.jobPostId)}
-                  >
-                    <i className="fa-solid fa-pen-to-square"></i>
-                  </Button>
-                </td>
-                <td>
-                  <Button
-                    color="error"
-                    variant="text"
-                    onClick={() => handleDelete(job.jobPostId)}
-                  >
-                    <i className="fa-solid fa-trash"></i>
-                  </Button>
-                </td>
+        <div className="show-jobs">
+          <table border={1} className="show-jobs-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Location</th>
+                <th>Image Link</th>
+                <th>Posted At</th>
+                <th>Expire Date</th>
+                <th>Category</th>
+                <th>Admin Name</th>
+                <th>Edit</th>
+                <th>Delete</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {jobsList.map((job) => (
+                <tr key={job.jobPostId}>
+                  <td className="multi-line-text">
+                    <Tooltip title={job.title} arrow>
+                      <span>{job.title}</span>
+                    </Tooltip>
+                  </td>
+                  <td className="multi-line-text">
+                    <Tooltip title={job.description} arrow>
+                      <span>{trimToTwoLines(job.description)}</span>
+                    </Tooltip>
+                  </td>
+                  <td className="multi-line-text">{job.location}</td>
+                  <td className="multi-line-text">{job.imageUrl}</td>
+                  <td className="multi-line-text">
+                    {new Date(job.createdAt).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </td>
+                  <td className="multi-line-text">
+                    {" "}
+                    {new Date(job.expireDate).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </td>
+                  <td className="multi-line-text">{job.category.name}</td>
+                  <td className="multi-line-text">
+                    {job.adminResponse.username}
+                  </td>
+                  <td>
+                    <Button
+                      color="primary"
+                      variant="text"
+                      onClick={() => handleUpdate(job.jobPostId)}
+                    >
+                      <i className="fa-solid fa-pen-to-square"></i>
+                    </Button>
+                  </td>
+                  <td>
+                    <Button
+                      color="error"
+                      variant="text"
+                      onClick={() => handleDelete(job.jobPostId)}
+                    >
+                      <i className="fa-solid fa-trash"></i>
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

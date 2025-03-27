@@ -76,9 +76,11 @@ function MenuBar(props) {
   const drawer = (
     <Box
       onClick={handleDrawerToggle}
-      sx={{ textAlign: "center", paddingTop: "5rem" }}
+      sx={{ textAlign: "center", paddingTop: "1rem" }}
     >
       <List>
+        <h2 style={{textAlign:"left",padding:"3rem 3rem 1rem"}}>Menu</h2>
+        <hr style={{marginBottom:"1rem"}}/>
         {navItems.map((item) => (
           <ListItem key={item} disablePadding>
             <ListItemButton
@@ -101,9 +103,9 @@ function MenuBar(props) {
       <CssBaseline />
       <AppBar position="static">
         <Toolbar
+          className="menu-toolbar"
           sx={{
-            minHeight: "45px !important",
-            backgroundColor: isLoggedIn ? "rgb(157, 0, 255)" : "black",
+            minHeight: "45px !important"
           }}
         >
           {/* Mobile Menu Button */}
