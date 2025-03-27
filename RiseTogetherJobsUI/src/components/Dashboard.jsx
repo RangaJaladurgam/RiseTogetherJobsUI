@@ -115,7 +115,7 @@ function Dashboard() {
                         {trimToTwoLines(internship.title.toUpperCase(), 5)}
                       </h4>
                       <div className="card-description">
-                        <p style={{fontSize:"13px"}}>{trimToTwoLines(internship.description, 10)}</p>
+                        <p style={{fontSize:"13px"}}>{trimToTwoLines(internship.description, 8)}</p>
                       </div>
                     </div>
                     <div
