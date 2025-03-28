@@ -105,7 +105,12 @@ function AdminShowJobs() {
                     </Tooltip>
                   </td>
                   <td className="multi-line-text">{job.location}</td>
-                  <td className="multi-line-text">{job.qualifications}</td>
+                  <td className="multi-line-text">{job.qualifications?.map((item, index) => (
+                      <span key={index}>
+                        {item}
+                        {index < job.qualifications.length - 1 ? ", " : ""}
+                      </span>
+                    ))}</td>
                   <td className="multi-line-text">
                     {job.passOutYears?.map((year, index) => (
                       <span key={index}>

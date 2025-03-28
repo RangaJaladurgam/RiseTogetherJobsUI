@@ -268,33 +268,6 @@ function PostJob() {
               helperText={imageUrlError}
               fullWidth
             />
-            <TextField
-              select
-              label="Year of Passing"
-              variant="outlined"
-              value={yop}
-              onChange={(e) =>
-                setYop(
-                  typeof e.target.value === "string"
-                    ? e.target.value.split(",")
-                    : e.target.value
-                )
-              }
-              error={!!yopError}
-              helperText={yopError}
-              fullWidth
-              SelectProps={{
-                multiple: true,
-                renderValue: (selected) => selected.join(", "),
-              }}
-            >
-              {years.map((year) => (
-                <MenuItem key={year} value={year}>
-                  <Checkbox checked={yop.indexOf(year) > -1} />
-                  <ListItemText primary={year} />
-                </MenuItem>
-              ))}
-            </TextField>
 
             <div className="img-cat">
               <TextField
@@ -326,7 +299,33 @@ function PostJob() {
               </TextField>
               <TextField
                 select
-                className="category-options"
+                label="Year of Passing"
+                variant="outlined"
+                value={yop}
+                onChange={(e) =>
+                  setYop(
+                    typeof e.target.value === "string"
+                      ? e.target.value.split(",")
+                      : e.target.value
+                  )
+                }
+                error={!!yopError}
+                helperText={yopError}
+                fullWidth
+                SelectProps={{
+                  multiple: true,
+                  renderValue: (selected) => selected.join(", "),
+                }}
+              >
+                {years.map((year) => (
+                  <MenuItem key={year} value={year}>
+                    <Checkbox checked={yop.indexOf(year) > -1} />
+                    <ListItemText primary={year} />
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                select
                 label="Category Title"
                 variant="outlined"
                 value={categoryTitle}
