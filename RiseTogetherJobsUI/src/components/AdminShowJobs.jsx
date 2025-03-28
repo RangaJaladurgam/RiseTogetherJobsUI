@@ -64,7 +64,7 @@ function AdminShowJobs() {
       ? words.slice(0, maxWords).join(" ") + "..."
       : text;
   };
-
+  console.log(jobsList);
   return (
     <div>
       <div className="show-jobs-container">
@@ -79,9 +79,12 @@ function AdminShowJobs() {
                 <th>Title</th>
                 <th>Description</th>
                 <th>Location</th>
+                <th>Qualification</th>
+                <th>YOP</th>
                 <th>Image Link</th>
                 <th>Posted At</th>
                 <th>Expire Date</th>
+                <th>Apply Link</th>
                 <th>Category</th>
                 <th>Admin Name</th>
                 <th>Edit</th>
@@ -102,6 +105,20 @@ function AdminShowJobs() {
                     </Tooltip>
                   </td>
                   <td className="multi-line-text">{job.location}</td>
+                  <td className="multi-line-text">{job.qualifications?.map((item, index) => (
+                      <span key={index}>
+                        {item}
+                        {index < job.qualifications.length - 1 ? ", " : ""}
+                      </span>
+                    ))}</td>
+                  <td className="multi-line-text">
+                    {job.passOutYears?.map((year, index) => (
+                      <span key={index}>
+                        {year}
+                        {index < job.passOutYears.length - 1 ? ", " : ""}
+                      </span>
+                    ))}
+                  </td>{" "}
                   <td className="multi-line-text">{job.imageUrl}</td>
                   <td className="multi-line-text">
                     {new Date(job.createdAt).toLocaleDateString("en-US", {
@@ -118,6 +135,7 @@ function AdminShowJobs() {
                       year: "numeric",
                     })}
                   </td>
+                  <td className="multi-line-text">{job.applyLink}</td>
                   <td className="multi-line-text">{job.category.name}</td>
                   <td className="multi-line-text">
                     {job.adminResponse.username}

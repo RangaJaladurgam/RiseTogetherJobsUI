@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
-import { MenuItem, TextField } from "@mui/material";
+import { MenuItem, TextField, Checkbox, ListItemText } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -12,10 +12,43 @@ import axios from "axios";
 import Image1 from "../assets/rtn-logo-3.jpeg";
 
 function UpdatePostJob() {
+  const years = [
+    "2018",
+    "2019",
+    "2020",
+    "2021",
+    "2022",
+    "2023",
+    "2024",
+    "2025",
+    "2026",
+    "2027",
+    "2028",
+  ];
+  const qualificationsList = [
+    "B.Tech",
+    "B.Sc",
+    "M.Tech",
+    "M.Sc",
+    "BCA",
+    "MCA",
+    "B.Com",
+    "M.Com",
+    "BA",
+    "MA",
+    "BBA",
+    "MBA",
+    "Diploma",
+    "PhD",
+    "ITI",
+    "Polytechnic",
+  ];
   const navigate = useNavigate();
   const { jobPostId } = useParams();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [qualifications, setQualifications] = useState([]);
+  const [yop, setYop] = useState([]);
   const [location, setLocation] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [expireDate, setExpireDate] = useState(null);
@@ -23,14 +56,18 @@ function UpdatePostJob() {
   const [categoryId, setCategoryId] = useState("");
   const [categories, setCategories] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [applyLink, setApplyLink] = useState("");
   const [categoryName, setCategoryName] = useState("");
 
   const [titleError, setTitleError] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
+  const [qualificationError, setQualificationError] = useState("");
+  const [yopError, setYopError] = useState("");
   const [locationError, setLocationError] = useState("");
   const [imageUrlError, setImageUrlError] = useState("");
   const [expireDateError, setExpireDateError] = useState("");
   const [categoryNameError, setCategoryNameError] = useState("");
+  const [applyLinkError, setApplyLinkError] = useState("");
 
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -71,6 +108,12 @@ function UpdatePostJob() {
     } else {
       setExpireDateError("");
     }
+    if (applyLink.trim() === "") {
+      setApplyLinkError("Apply Link cannot be blank");
+      isValid = false;
+    } else {
+      setApplyLinkError("");
+    }
 
     return isValid;
   };
@@ -90,28 +133,31 @@ function UpdatePostJob() {
       const token = localStorage.getItem("token");
       try {
         const response = await axios.get(
-          "http://localhost:8080/jobs/" + jobPostId,
+          `http://localhost:8080/jobs/${jobPostId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
             validateStatus: (status) => status === 200 || status === 302,
           }
         );
-        const job = response.data.data;
         if (response.status === 302) {
+          const job = response.data.data;
           setTitle(job.title);
           setDescription(job.description);
+          setQualifications(job.qualifications);
+          setYop(job.passOutYears.map(String));
           setLocation(job.location);
-          setExpireDate(job.expireDate);
+          setExpireDate(dayjs(job.expireDate)); // Ensure correct date format
           setCategoryId(job.category.categoryId);
           setCategoryTitle(job.category.name);
           setImageUrl(job.imageUrl);
+          setApplyLink(job.applyLink);
         }
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching job data:", error);
       }
     };
-    fetchJobPost();
-  }, []);
+    if (jobPostId) fetchJobPost();
+  }, [jobPostId]); // Add jobPostId as dependency
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -123,9 +169,12 @@ function UpdatePostJob() {
           {
             title: title,
             description: description,
+            qualifications: qualifications,
+            passOutYears: yop,
             location: location,
             imageUrl: imageUrl,
             expireDate: expireDate,
+            applyLink: applyLink,
           },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -138,9 +187,12 @@ function UpdatePostJob() {
           setShowSuccessAlert(true);
           setTitle(""); // Clear input// Hide after 3 sec
           setDescription(""); // Clear input// Hide after 3 sec
+          setQualifications([]); // Clear input// Hide after 3 sec
           setLocation(""); // Clear input// Hide after 3 sec
           setImageUrl(""); // Clear input// Hide after 3 sec
-          setExpireDate(""); // Clear input// Hide after 3 sec
+          setYop([]);
+          setExpireDate(null); // Clear input// Hide after 3 sec
+          setApplyLink(""); // Clear input// Hide after 3 sec
           setTimeout(() => setShowSuccessAlert(false), 5000);
           navigate("/admins/show-jobs");
         } else {
@@ -152,7 +204,8 @@ function UpdatePostJob() {
       }
     }
   };
-
+  console.log(yop);
+  console.log(qualifications);
   const handleCategorySubmit = async (e) => {
     e.preventDefault();
     if (validateCategoryInputs()) {
@@ -235,25 +288,80 @@ function UpdatePostJob() {
               helperText={descriptionError}
               fullWidth
               multiline
-              minRows={2} // Set default rows
-              maxRows={6} // Expandable up to 6 rows
-              sx={{ resize: "vertical" }} // Allow manual resizing
+              minRows={2}
+              maxRows={6}
+              sx={{ resize: "vertical" }}
             />
+            <TextField
+              label="Image Link"
+              type="url"
+              variant="outlined"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              error={!!imageUrlError}
+              helperText={imageUrlError}
+              fullWidth
+            />
+
             <div className="img-cat">
               <TextField
-                className="img-url"
-                label="Image Link"
-                type="url"
+                select
+                label="Qualification"
                 variant="outlined"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                error={!!imageUrlError}
-                helperText={imageUrlError}
+                value={qualifications}
+                onChange={(e) =>
+                  setQualifications(
+                    typeof e.target.value === "string"
+                      ? e.target.value.split(",")
+                      : e.target.value
+                  )
+                }
+                error={!!qualificationError}
+                helperText={qualificationError}
                 fullWidth
-              />
+                SelectProps={{
+                  multiple: true,
+                  renderValue: (selected) => selected.join(", "),
+                }}
+              >
+                {qualificationsList.map((qualification) => (
+                  <MenuItem key={qualification} value={qualification}>
+                    <Checkbox
+                      checked={qualifications.indexOf(qualification) > -1}
+                    />
+                    <ListItemText primary={qualification} />
+                  </MenuItem>
+                ))}
+              </TextField>
               <TextField
                 select
-                className="category-options"
+                label="Year of Passing"
+                variant="outlined"
+                value={yop}
+                onChange={(e) =>
+                  setYop(
+                    typeof e.target.value === "string"
+                      ? e.target.value.split(",")
+                      : e.target.value
+                  )
+                }
+                error={!!yopError}
+                helperText={yopError}
+                fullWidth
+                SelectProps={{
+                  multiple: true,
+                  renderValue: (selected) => selected.join(", "),
+                }}
+              >
+                {years.map((year) => (
+                  <MenuItem key={year} value={year}>
+                    <Checkbox checked={yop.indexOf(year) > -1} />
+                    <ListItemText primary={year} />
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                select
                 label="Category Title"
                 variant="outlined"
                 value={categoryTitle}
@@ -307,6 +415,16 @@ function UpdatePostJob() {
                 }}
               />
             </div>
+            <TextField
+              label="Apply Link"
+              type="url"
+              variant="outlined"
+              value={applyLink}
+              onChange={(e) => setApplyLink(e.target.value)}
+              error={!!applyLinkError}
+              helperText={applyLinkError}
+              fullWidth
+            />
             <Button
               type="submit"
               variant="contained"
